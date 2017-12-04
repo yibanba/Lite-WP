@@ -79,7 +79,7 @@ function wp_admin_bar_wp_menu( $wp_admin_bar ) {
 		'title' => '<span class="ab-icon"></span>',
 		'href'  => self_admin_url( 'about.php' ),
 		'meta'  => array(
-			'title' => __('About WordPress'),
+			'title' => '关于 MixFS',
 		),
 	) );
 
@@ -88,42 +88,10 @@ function wp_admin_bar_wp_menu( $wp_admin_bar ) {
 		$wp_admin_bar->add_menu( array(
 			'parent' => 'wp-logo',
 			'id'     => 'about',
-			'title'  => __('About WordPress'),
+			'title'  => '关于 MixFS',
 			'href'  => self_admin_url( 'about.php' ),
 		) );
 	}
-
-	// Add WordPress.org link
-	$wp_admin_bar->add_menu( array(
-		'parent'    => 'wp-logo-external',
-		'id'        => 'wporg',
-		'title'     => __('WordPress.org'),
-		'href'      => __('http://wordpress.org/'),
-	) );
-
-	// Add codex link
-	$wp_admin_bar->add_menu( array(
-		'parent'    => 'wp-logo-external',
-		'id'        => 'documentation',
-		'title'     => __('Documentation'),
-		'href'      => __('http://codex.wordpress.org/'),
-	) );
-
-	// Add forums link
-	$wp_admin_bar->add_menu( array(
-		'parent'    => 'wp-logo-external',
-		'id'        => 'support-forums',
-		'title'     => __('Support Forums'),
-		'href'      => __('http://wordpress.org/support/'),
-	) );
-
-	// Add feedback link
-	$wp_admin_bar->add_menu( array(
-		'parent'    => 'wp-logo-external',
-		'id'        => 'feedback',
-		'title'     => __('Feedback'),
-		'href'      => __('http://wordpress.org/support/forum/requests-and-feedback'),
-	) );
 }
 
 /**
