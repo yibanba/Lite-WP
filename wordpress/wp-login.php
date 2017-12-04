@@ -192,11 +192,8 @@ addLoadEvent(function(){ var p=new Array(15,30,15,0,-15,-30,-15,0);p=p.concat(p.
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'login';
 $errors = new WP_Error();
 
-if ( isset($_GET['key']) )
-	$action = 'resetpass';
-
 // validate action so as to default to the login screen
-if ( !in_array( $action, array( 'postpass', 'logout', 'lostpassword', 'retrievepassword', 'resetpass', 'rp', 'register', 'login' ), true ) && false === has_filter( 'login_form_' . $action ) )
+if ( !in_array( $action, array( 'logout', 'rp', 'login' ), true ) && false === has_filter( 'login_form_' . $action ) )
 	$action = 'login';
 
 nocache_headers();
@@ -225,18 +222,6 @@ $http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
 $interim_login = isset($_REQUEST['interim-login']);
 
 switch ($action) {
-
-case 'postpass' :
-	require_once ABSPATH . 'wp-includes/class-phpass.php';
-	$hasher = new PasswordHash( 8, true );
-
-	// 10 days
-	setcookie( 'wp-postpass_' . COOKIEHASH, $hasher->HashPassword( wp_unslash( $_POST['post_password'] ) ), time() + 10 * DAY_IN_SECONDS, COOKIEPATH );
-
-	wp_safe_redirect( wp_get_referer() );
-	exit();
-
-break;
 
 case 'logout' :
 	check_admin_referer('log-out');
@@ -330,14 +315,6 @@ default:
 		// Some parts of this script use the main login form to display a message
 		if		( isset($_GET['loggedout']) && true == $_GET['loggedout'] )
 			$errors->add('loggedout', __('You are now logged out.'), 'message');
-		elseif	( isset($_GET['registration']) && 'disabled' == $_GET['registration'] )
-			$errors->add('registerdisabled', __('User registration is currently not allowed.'));
-		elseif	( isset($_GET['checkemail']) && 'confirm' == $_GET['checkemail'] )
-			$errors->add('confirm', __('Check your e-mail for the confirmation link.'), 'message');
-		elseif	( isset($_GET['checkemail']) && 'newpass' == $_GET['checkemail'] )
-			$errors->add('newpass', __('Check your e-mail for your new password.'), 'message');
-		elseif	( isset($_GET['checkemail']) && 'registered' == $_GET['checkemail'] )
-			$errors->add('registered', __('Registration complete. Please check your e-mail.'), 'message');
 		elseif ( strpos( $redirect_to, 'about.php?updated' ) )
 			$errors->add('updated', __( '<strong>You have successfully updated WordPress!</strong> Please log back in to experience the awesomeness.' ), 'message' );
 	}
