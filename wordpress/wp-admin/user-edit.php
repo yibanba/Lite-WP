@@ -36,9 +36,7 @@ if ( current_user_can('edit_users') && !is_user_admin() )
 else
 	$parent_file = 'profile.php';
 
-$profile_help = '<p>' . __('Your profile contains information about you (your &#8220;account&#8221;) as well as some personal options related to using WordPress.') . '</p>' .
-	'<p>' . __('You can change your password, turn on keyboard shortcuts, change the color scheme of your WordPress administration screens, and turn off the WYSIWYG (Visual) editor, among other things. You can hide the Toolbar (formerly called the Admin Bar) from the front end of your site, however it cannot be disabled on the admin screens.') . '</p>' .
-	'<p>' . __('Your username cannot be changed, but you can use other fields to enter your real name or a nickname, and change which name to display on your posts.') . '</p>' .
+$profile_help = '<p>' . __('Your username cannot be changed, but you can use other fields to enter your real name or a nickname, and change which name to display on your posts.') . '</p>' .
 	'<p>' . __('Required fields are indicated; the rest are optional. Profile information will only be displayed if your theme is set up to do so.') . '</p>' .
 	'<p>' . __('Remember to click the Update Profile button when you are finished.') . '</p>';
 
@@ -47,12 +45,6 @@ get_current_screen()->add_help_tab( array(
 	'title'   => __('Overview'),
 	'content' => $profile_help,
 ) );
-
-get_current_screen()->set_help_sidebar(
-    '<p><strong>' . __('For more information:') . '</strong></p>' .
-    '<p>' . __('<a href="http://codex.wordpress.org/Users_Your_Profile_Screen" target="_blank">Documentation on User Profiles</a>') . '</p>' .
-    '<p>' . __('<a href="http://wordpress.org/support/" target="_blank">Support Forums</a>') . '</p>'
-);
 
 $wp_http_referer = remove_query_arg(array('update', 'delete_count'), $wp_http_referer );
 
@@ -276,56 +268,6 @@ if ( is_multisite() && is_network_admin() && ! IS_PROFILE_PAGE && current_user_c
 </td></tr>
 <?php } ?>
 
-<tr>
-	<th><label for="first_name"><?php _e('First Name') ?></label></th>
-	<td><input type="text" name="first_name" id="first_name" value="<?php echo esc_attr($profileuser->first_name) ?>" class="regular-text" /></td>
-</tr>
-
-<tr>
-	<th><label for="last_name"><?php _e('Last Name') ?></label></th>
-	<td><input type="text" name="last_name" id="last_name" value="<?php echo esc_attr($profileuser->last_name) ?>" class="regular-text" /></td>
-</tr>
-
-<tr>
-	<th><label for="nickname"><?php _e('Nickname'); ?> <span class="description"><?php _e('(required)'); ?></span></label></th>
-	<td><input type="text" name="nickname" id="nickname" value="<?php echo esc_attr($profileuser->nickname) ?>" class="regular-text" /></td>
-</tr>
-
-<tr>
-	<th><label for="display_name"><?php _e('Display name publicly as') ?></label></th>
-	<td>
-		<select name="display_name" id="display_name">
-		<?php
-			$public_display = array();
-			$public_display['display_nickname']  = $profileuser->nickname;
-			$public_display['display_username']  = $profileuser->user_login;
-
-			if ( !empty($profileuser->first_name) )
-				$public_display['display_firstname'] = $profileuser->first_name;
-
-			if ( !empty($profileuser->last_name) )
-				$public_display['display_lastname'] = $profileuser->last_name;
-
-			if ( !empty($profileuser->first_name) && !empty($profileuser->last_name) ) {
-				$public_display['display_firstlast'] = $profileuser->first_name . ' ' . $profileuser->last_name;
-				$public_display['display_lastfirst'] = $profileuser->last_name . ' ' . $profileuser->first_name;
-			}
-
-			if ( !in_array( $profileuser->display_name, $public_display ) ) // Only add this if it isn't duplicated elsewhere
-				$public_display = array( 'display_displayname' => $profileuser->display_name ) + $public_display;
-
-			$public_display = array_map( 'trim', $public_display );
-			$public_display = array_unique( $public_display );
-
-			foreach ( $public_display as $id => $item ) {
-		?>
-			<option <?php selected( $profileuser->display_name, $item ); ?>><?php echo $item; ?></option>
-		<?php
-			}
-		?>
-		</select>
-	</td>
-</tr>
 </table>
 
 <h3><?php _e('Contact Info') ?></h3>
@@ -344,11 +286,6 @@ if ( is_multisite() && is_network_admin() && ! IS_PROFILE_PAGE && current_user_c
 	</td>
 </tr>
 
-<tr>
-	<th><label for="url"><?php _e('Website') ?></label></th>
-	<td><input type="text" name="url" id="url" value="<?php echo esc_attr($profileuser->user_url) ?>" class="regular-text code" /></td>
-</tr>
-
 <?php
 	foreach (_wp_get_user_contactmethods( $profileuser ) as $name => $desc) {
 ?>
@@ -364,11 +301,6 @@ if ( is_multisite() && is_network_admin() && ! IS_PROFILE_PAGE && current_user_c
 <h3><?php IS_PROFILE_PAGE ? _e('About Yourself') : _e('About the user'); ?></h3>
 
 <table class="form-table">
-<tr>
-	<th><label for="description"><?php _e('Biographical Info'); ?></label></th>
-	<td><textarea name="description" id="description" rows="5" cols="30"><?php echo $profileuser->description; // textarea_escaped ?></textarea><br />
-	<span class="description"><?php _e('Share a little biographical information to fill out your profile. This may be shown publicly.'); ?></span></td>
-</tr>
 
 <?php
 $show_password_fields = apply_filters('show_password_fields', true, $profileuser);
